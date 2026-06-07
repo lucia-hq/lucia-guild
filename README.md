@@ -26,23 +26,21 @@ In Claude Code:
 /plugin install lucia@lucia-guild
 ```
 
-### No `/plugin` command?
+### In the Claude Desktop app (Cowork)
 
-`/plugin` lives in the **terminal `claude` CLI** — it isn't exposed in the
-**Claude Desktop app** or the VS Code / JetBrains panels, where you'll see
-_"/plugin isn't available in this environment."_ Open a real terminal (Terminal,
-iTerm, …), start Claude Code, and run the install there:
+`/plugin` is a **terminal** command — in the desktop app you'll see _"/plugin
+isn't available in this environment."_ Cowork has its own plugin manager instead:
 
-```bash
-claude
-# then, inside the session:
-#   /plugin marketplace add lucia-hq/lucia-guild
-#   /plugin install lucia@lucia-guild
-```
+1. **Cowork** tab → **Customize** → **Plugins**.
+2. **`+` → Add marketplace** → **GitHub** → **`lucia-hq/lucia-guild`**.
+3. Install the **`lucia`** plugin, then run `/reload-plugins`.
+4. Run `/lucia login`.
 
-If `/plugin` still isn't found in a terminal, update Claude Code
-(`npm i -g @anthropic-ai/claude-code@latest`) and restart. Or skip the
-marketplace entirely with the manual install below.
+### No `/plugin` command in a terminal?
+
+Update Claude Code (`npm i -g @anthropic-ai/claude-code@latest`) and restart — or
+use the manual install below. (`~/.claude/skills/` is shared between the terminal
+CLI and Cowork, so either install shows up in both.)
 
 ### Manual install (no marketplace)
 
