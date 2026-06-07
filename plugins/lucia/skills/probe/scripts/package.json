@@ -1,0 +1,9 @@
+{
+  "name": "lucia-probe-scripts",
+  "private": true,
+  "type": "module",
+  "description": "Probe agentic AT-user tester — CDP a11y harness, deterministic verifier, eval scorer.",
+  "dependencies": {
+    "playwright": "^1.48.0"
+  }
+}

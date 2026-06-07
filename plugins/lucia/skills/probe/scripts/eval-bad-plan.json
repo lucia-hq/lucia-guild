@@ -1,0 +1,10 @@
+{ "site": "w3c-bad", "reviewer": { "name": "Lucia Agent (Probe)", "environment": "Chromium CDP a11y-tree" }, "findings": [
+  { "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html", "wcagSc": "2.4.1", "subject": "No working skip link / bypass for repeated blocks", "selector": "body", "verified": true, "source": "fathom" },
+  { "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html", "wcagSc": "2.4.4", "subject": "Navigation links have no text / accessible name", "selector": "tr:nth-of-type(2) > td > a", "verified": true, "source": "fathom" },
+  { "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html", "wcagSc": "4.1.2", "subject": "Jump navigation links expose no accessible name", "selector": "tr:nth-of-type(4) > td > a", "verified": true, "source": "fathom" },
+  { "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html", "wcagSc": "3.2.2", "subject": "Quick-menu select navigates on change (context change on input)", "selector": "select", "verified": true, "source": "fathom" },
+  { "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html", "wcagSc": "2.4.7", "subject": "Script removes focus when a link receives it (focus never visible)", "selector": "a[onfocus]", "verified": true, "source": "fathom" },
+  { "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html", "wcagSc": "3.2.1", "subject": "Receiving focus triggers an unexpected change (focus is removed)", "selector": "a[onfocus]", "verified": true, "source": "fathom" },
+  { "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html", "wcagSc": "3.3.2", "subject": "Quick-menu select has no associated label", "selector": "select", "verified": true, "source": "fathom" },
+  { "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html", "wcagSc": "2.1.1", "subject": "Navigation rollovers use pointer-only handlers, not keyboard operable", "selector": "td[onmouseover]", "verified": true, "source": "fathom" }
+] }

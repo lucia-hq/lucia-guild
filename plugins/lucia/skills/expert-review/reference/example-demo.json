@@ -1,0 +1,52 @@
+{
+  "siteId": "demo-abc12345",
+  "site": "Synthetic example — public W3C WAI Before-and-After demo (inaccessible page)",
+  "url": "https://www.w3.org/WAI/demos/bad/before/home.html",
+  "note": "A minimal, well-formed example plan (per reference/plan-schema.md) against W3C's intentionally-inaccessible Before-and-After demo. It shows the two finding shapes: an attribute/CSS fix that compiles to a Stitch, and a content-judgement finding left as a developer recommendation. Use it as a template for your own plans.",
+  "reviewer": {
+    "name": "the reviewer",
+    "date": "2026-01-01",
+    "environment": "Windows 11, Chrome, 200%/400% zoom, keyboard-only, screen reader"
+  },
+  "findings": [
+    {
+      "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html",
+      "wcagSc": "2.4.1",
+      "wcagName": "Bypass Blocks (Level A)",
+      "subject": "No working skip link to bypass the repeated navigation",
+      "explanation": "A keyboard or screen-reader user must tab through the whole navigation on every page; there is no mechanism to jump straight to the main content.",
+      "severity": "serious",
+      "selector": "body",
+      "recommendation": "Add a visually-hidden skip link as the first focusable element, targeting the main content region, and give that region tabindex=-1 so focus can land on it.",
+      "stitches": [
+        { "op": "prepend-html", "selector": "body", "html": "<a class=\"skip-link\" href=\"#main\">Skip to main content</a>" },
+        { "op": "set-attr", "selector": "#main", "name": "tabindex", "value": "-1" },
+        { "op": "inject-style", "selector": ".skip-link", "css": ".skip-link{position:absolute;left:-9999px;top:0}.skip-link:focus{position:fixed;left:1rem;top:1rem;z-index:10000;padding:.75rem 1rem;background:#fff;color:#000;border:2px solid #000}" }
+      ]
+    },
+    {
+      "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html",
+      "wcagSc": "3.1.1",
+      "wcagName": "Language of Page (Level A)",
+      "subject": "Page language is not set programmatically",
+      "explanation": "The document has no lang attribute, so assistive technology can't pick the correct pronunciation rules.",
+      "severity": "moderate",
+      "selector": "html",
+      "recommendation": "Set the document language on the html element.",
+      "stitches": [
+        { "op": "set-attr", "selector": "html", "name": "lang", "value": "en" }
+      ]
+    },
+    {
+      "pageUrl": "https://www.w3.org/WAI/demos/bad/before/home.html",
+      "wcagSc": "1.1.1",
+      "wcagName": "Non-text Content (Level A)",
+      "subject": "Informative images need accurate text alternatives",
+      "explanation": "Several images convey information but lack a meaningful alt attribute. Whether a given alternative is correct is a content judgement, so this is recorded as a developer recommendation rather than auto-patched.",
+      "severity": "serious",
+      "selector": "img",
+      "recommendation": "Author an alt attribute for each informative image that conveys the same information as the image; mark purely decorative images with an empty alt.",
+      "stitches": []
+    }
+  ]
+}

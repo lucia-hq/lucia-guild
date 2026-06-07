@@ -1,0 +1,11 @@
+{
+  "name": "lucia-guild",
+  "owner": { "name": "Lucia" },
+  "plugins": [
+    {
+      "name": "lucia",
+      "source": "./plugins/lucia",
+      "description": "Lucia Guild — claim and deliver web-accessibility audit jobs from Claude Code."
+    }
+  ]
+}

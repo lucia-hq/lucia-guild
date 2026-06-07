@@ -1,0 +1,6 @@
+node_modules/
+
+# Per-audit evidence bundles (operator-side chain-of-custody record, not source).
+# Each verify.mjs run writes runs/<runId>/{run.json,evidence.png} + runs/ledger.jsonl.
+# Retain these as the evidence pack for an audit; they are not committed to the skill.
+runs/
