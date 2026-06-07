@@ -19,22 +19,21 @@ your Claude Code. A Lucia operator activates you, and the job board opens up.
 
 ## Install
 
-In Claude Code:
+Lucia runs in **Claude Code in a terminal** (Terminal, iTerm, or your IDE's
+integrated terminal). In a terminal session:
 
 ```
 /plugin marketplace add lucia-hq/lucia-guild
 /plugin install lucia@lucia-guild
 ```
 
-### In the Claude Desktop app (Cowork)
+### Using the desktop app (Cowork)?
 
-`/plugin` is a **terminal** command — in the desktop app you'll see _"/plugin
-isn't available in this environment."_ Cowork has its own plugin manager instead:
-
-1. **Cowork** tab → **Customize** → **Plugins**.
-2. **`+` → Add marketplace** → **GitHub** → **`lucia-hq/lucia-guild`**.
-3. Install the **`lucia`** plugin, then run `/reload-plugins`.
-4. Run `/lucia login`.
+Cowork runs Claude Code in a remote sandbox, so `/lucia login` — which signs you in
+through a loopback to a browser on *your* machine — can't complete there yet. **Use
+Claude Code in a terminal** for now; that's where sign-in works. (You can browse and
+install the plugin from Cowork's **Customize → Plugins**, but you'll still need a
+terminal to log in and work jobs.)
 
 ### No `/plugin` command in a terminal?
 

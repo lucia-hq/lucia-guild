@@ -89,6 +89,14 @@ p{margin:12px 0 0;font-size:14px}
 }
 
 export function login({ timeoutMs = 180_000 } = {}) {
+  // The loopback flow needs the browser and this CLI on the same machine. In the
+  // Claude desktop app (Cowork) the CLI runs in a remote sandbox, so 127.0.0.1
+  // can't bridge to your browser — fail fast with guidance instead of timing out.
+  if (process.env.CLAUDE_CODE_ENTRYPOINT === "claude-desktop") {
+    return Promise.reject(new Error(
+      "Sign-in can't complete in the Claude desktop app (Cowork): the CLI runs in a sandbox that can't reach your browser's 127.0.0.1 loopback. Run `/lucia login` in Claude Code in a terminal instead.",
+    ));
+  }
   const state = randomBytes(16).toString("hex");
   return new Promise((resolve, reject) => {
     let done = false;
