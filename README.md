@@ -28,11 +28,21 @@ In Claude Code:
 
 ### No `/plugin` command?
 
-`/plugin` needs a recent Claude Code **and an interactive terminal**. If you see
-**"/plugin isn't available in this environment"**: update Claude Code
-(`npm i -g @anthropic-ai/claude-code@latest`, or `brew upgrade claude-code`) and
-**restart** it. Note that `/plugin` is disabled inside non-interactive / SDK /
-agent sessions — run it in a normal `claude` terminal.
+`/plugin` lives in the **terminal `claude` CLI** — it isn't exposed in the
+**Claude Desktop app** or the VS Code / JetBrains panels, where you'll see
+_"/plugin isn't available in this environment."_ Open a real terminal (Terminal,
+iTerm, …), start Claude Code, and run the install there:
+
+```bash
+claude
+# then, inside the session:
+#   /plugin marketplace add lucia-hq/lucia-guild
+#   /plugin install lucia@lucia-guild
+```
+
+If `/plugin` still isn't found in a terminal, update Claude Code
+(`npm i -g @anthropic-ai/claude-code@latest`) and restart. Or skip the
+marketplace entirely with the manual install below.
 
 ### Manual install (no marketplace)
 
