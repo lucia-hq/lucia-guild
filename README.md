@@ -23,9 +23,14 @@ Lucia runs in **Claude Code in a terminal** (Terminal, iTerm, or your IDE's
 integrated terminal). In a terminal session:
 
 ```
-/plugin marketplace add lucia-hq/lucia-guild
+/plugin marketplace add https://github.com/lucia-hq/lucia-guild.git
 /plugin install lucia@lucia-guild
 ```
+
+Run each line on its own and let it finish before the next. The full `https://….git`
+URL matters: the `owner/repo` shorthand makes Claude Code clone over **SSH**, which
+fails if you don't have GitHub SSH keys (`Permission denied (publickey)`) — HTTPS
+needs none for a public repo.
 
 ### Using the desktop app (Cowork)?
 
