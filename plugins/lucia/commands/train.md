@@ -42,3 +42,8 @@ Do these steps in order, narrating clearly and encouragingly:
    shows status).
 
 Keep it warm and concise — this is their first taste of the work.
+
+
+---
+
+**Accessibility — keep output clean for screen readers.** The person using this may rely on a screen reader. Keep everything you print short and plain: linear single-idea lines, no tables, ASCII art, emoji, progress bars, box-drawing, or decorative symbols. Lead with the essential result and skip preamble.

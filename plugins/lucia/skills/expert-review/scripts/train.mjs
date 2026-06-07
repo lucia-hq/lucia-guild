@@ -18,7 +18,7 @@ import { login, readCachedToken } from "./login.mjs";
 const API_URL = (process.env.LUCIA_API_URL || "https://api.getlucia.ai").replace(/\/+$/, "");
 
 function die(msg) {
-  console.error(`\x1b[31merror:\x1b[0m ${msg}`);
+  console.error(`error: ${msg}`);
   process.exit(1);
 }
 
@@ -71,9 +71,9 @@ async function main() {
     case "start": {
       const url = rest.find((a) => !a.startsWith("--"));
       const out = await mutate("training.start", { url: url || undefined });
-      console.log(`\x1b[32m✓ training site ready\x1b[0m  (${out.isDefaultDemo ? "W3C demo" : out.url})`);
+      console.log(`training site ready  (${out.isDefaultDemo ? "W3C demo" : out.url})`);
       console.log(`  siteId:   ${out.siteId}`);
-      console.log(`  preview:  \x1b[36m${out.previewUrl}\x1b[0m`);
+      console.log(`  preview:  ${out.previewUrl}`);
       console.log(`  The automated pipeline is now remediating it.`);
       console.log(`  Watch it: node train.mjs status ${out.siteId}`);
       return;
@@ -82,27 +82,26 @@ async function main() {
       const id = rest[0];
       if (!id || id.startsWith("--")) die("usage: node train.mjs status <siteId>");
       const s = await query("training.status", { siteId: id });
-      const bar = "#".repeat(Math.round((s.percent || 0) / 5)).padEnd(20, "·");
-      console.log(`[${bar}] ${s.percent || 0}%  \x1b[36m${s.status}\x1b[0m`);
+      console.log(`Progress: ${s.percent || 0}% (${s.status})`);
       if (s.scoreBefore != null && s.scoreAfter != null) {
-        console.log(`  score: ${s.scoreBefore} → \x1b[32m${s.scoreAfter}\x1b[0m`);
+        console.log(`  score: ${s.scoreBefore} -> ${s.scoreAfter}`);
       }
-      if (s.previewUrl) console.log(`  preview: \x1b[36m${s.previewUrl}\x1b[0m`);
-      if (s.status === "done") console.log(`  \x1b[32mAuto-remediation complete.\x1b[0m Audit it with the probe skill, then submit one human fix.`);
-      if (s.status === "failed") console.log(`  \x1b[31mScan failed.\x1b[0m Try \`node train.mjs start\` again (the demo URL, or a simpler page).`);
+      if (s.previewUrl) console.log(`  preview: ${s.previewUrl}`);
+      if (s.status === "done") console.log(`  Auto-remediation complete. Audit it with the probe skill, then submit one human fix.`);
+      if (s.status === "failed") console.log(`  Scan failed. Try \`node train.mjs start\` again (the demo URL, or a simpler page).`);
       return;
     }
     case "complete": {
       const id = rest[0];
       if (!id || id.startsWith("--")) die("usage: node train.mjs complete <siteId>");
       await mutate("training.complete", { siteId: id });
-      console.log(`\x1b[32m✓ training complete.\x1b[0m Nice work — that's the whole Lucian loop.`);
+      console.log(`training complete. Nice work — that's the whole Lucian loop.`);
       console.log(`A Lucia operator will activate you for real jobs (check: /lucia:whoami).`);
       return;
     }
     default:
       console.log("Guild training CLI. Commands:");
-      console.log("  start [url] · status <siteId> · complete <siteId>");
+      console.log("  start [url], status <siteId>, complete <siteId>");
   }
 }
 

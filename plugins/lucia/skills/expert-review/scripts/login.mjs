@@ -70,7 +70,7 @@ function openBrowser(url) {
 // "you can close this" hint when the close is blocked.
 export function authPageHtml({ ok }) {
   const body = ok
-    ? `<p class="ok">✓ Authorized</p><p class="muted" id="hint">Returning you to your terminal…</p>`
+    ? `<p class="ok">Authorized</p><p class="muted" id="hint">Returning you to your terminal…</p>`
     : `<p class="err">Authorization failed</p><p class="muted">State mismatch or no token — return to your terminal and retry.</p>`;
   const script = ok
     ? `<script>setTimeout(function(){try{window.open('','_self');}catch(e){}window.close();setTimeout(function(){var h=document.getElementById('hint');if(h)h.textContent='Authorized — you can close this tab and return to your terminal.';},250);},1100);</script>`

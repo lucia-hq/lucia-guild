@@ -21,3 +21,8 @@ Present (concisely — don't dump a wall of text):
   → a Lucia operator activates you → claim real jobs.
 
 Then ask if they'd like to start the training now (`/lucia:train`).
+
+
+---
+
+**Accessibility — keep output clean for screen readers.** The person using this may rely on a screen reader. Keep everything you print short and plain: linear single-idea lines, no tables, ASCII art, emoji, progress bars, box-drawing, or decorative symbols. Lead with the essential result and skip preamble.

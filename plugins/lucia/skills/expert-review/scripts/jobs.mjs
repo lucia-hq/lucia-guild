@@ -27,7 +27,7 @@ import { login, readCachedToken } from "./login.mjs";
 const API_URL = (process.env.LUCIA_API_URL || "https://api.getlucia.ai").replace(/\/+$/, "");
 
 function die(msg) {
-  console.error(`\x1b[31merror:\x1b[0m ${msg}`);
+  console.error(`error: ${msg}`);
   process.exit(1);
 }
 
@@ -80,11 +80,11 @@ function money(cents) { return "$" + Math.round((cents || 0) / 100).toLocaleStri
 
 function printJob(j) {
   const quote = j.custom ? "Custom quote" : money(j.quoteCents);
-  const rush = j.priority === "rush" ? " \x1b[33m[RUSH]\x1b[0m" : "";
+  const rush = j.priority === "rush" ? " [RUSH]" : "";
   const variants = Math.max(0, (j.pageCountTotal || 0) - (j.pageCountUnique || 0));
-  console.log(`  \x1b[1m${j.id}\x1b[0m${rush}`);
-  console.log(`    ${j.siteHostname || j.siteId}  ·  \x1b[36m${j.sizeTier}\x1b[0m  ·  ${quote}  ·  ~${j.estimatedHours}h`);
-  console.log(`    ${j.pageCountUnique} unique page(s) · ${variants} variant(s) · ${j.languageCount} language(s)  ·  status=${j.status}`);
+  console.log(`  ${j.id}${rush}`);
+  console.log(`    ${j.siteHostname || j.siteId}, ${j.sizeTier}, ${quote}, ~${j.estimatedHours}h`);
+  console.log(`    ${j.pageCountUnique} unique page(s), ${variants} variant(s), ${j.languageCount} language(s), status=${j.status}`);
 }
 
 async function main() {
@@ -93,8 +93,8 @@ async function main() {
     case "whoami": {
       const me = await query("experts.me", undefined);
       if (!me) { console.log("Not a Lucian yet. Apply with: node jobs.mjs apply"); return; }
-      console.log(`\x1b[1m${me.displayName || me.email}\x1b[0m — ${me.tier} · status=${me.status}`);
-      console.log(`Claude Code: ${me.claudeConnectedAt ? "connected ✓" : "\x1b[33mNOT connected\x1b[0m — run: /lucia login"}`);
+      console.log(`${me.displayName || me.email} — ${me.tier}, status=${me.status}`);
+      console.log(`Claude Code: ${me.claudeConnectedAt ? "connected " : "NOT connected — run: /lucia login"}`);
       return;
     }
     case "apply": {
@@ -112,14 +112,14 @@ async function main() {
     case "login": {
       await ensureToken();
       await mutate("experts.connectClaude", undefined);
-      console.log("\x1b[32m✓ logged in\x1b[0m and connected your Claude Code to the Guild.");
+      console.log("logged in and connected your Claude Code to the Guild.");
       console.log("A Lucia operator will activate you — then run: /lucia jobs");
       return;
     }
     case "list": {
       const jobs = await query("jobs.listOpen", undefined);
       if (!jobs?.length) { console.log("No open jobs right now — the board is live, check back."); return; }
-      console.log(`\x1b[1m${jobs.length} open job(s):\x1b[0m`);
+      console.log(`${jobs.length} open job(s):`);
       for (const j of jobs) printJob(j);
       console.log(`\nClaim one: node jobs.mjs claim <jobId>`);
       return;
@@ -134,7 +134,7 @@ async function main() {
       const id = rest[0];
       if (!id || id.startsWith("--")) die("usage: node jobs.mjs claim <jobId>");
       const out = await mutate("jobs.claim", { jobId: id });
-      console.log(`\x1b[32m✓ claimed\x1b[0m ${out.jobId}  (hold expires ${out.holdExpiresAt})`);
+      console.log(`claimed ${out.jobId}  (hold expires ${out.holdExpiresAt})`);
       console.log(`Start work: node jobs.mjs start ${id}`);
       return;
     }
@@ -142,7 +142,7 @@ async function main() {
       const id = rest[0];
       if (!id || id.startsWith("--")) die("usage: node jobs.mjs start <jobId>");
       await mutate("jobs.start", { jobId: id });
-      console.log(`\x1b[32m✓ started\x1b[0m ${id}. Audit the site with the probe skill, submit fixes with ./submit.mjs,`);
+      console.log(`started ${id}. Audit the site with the probe skill, submit fixes with ./submit.mjs,`);
       console.log(`then hand it to QA: node jobs.mjs submit ${id} --findings N --net-new N`);
       return;
     }
@@ -157,12 +157,12 @@ async function main() {
         netNewCount: Number(flag(rest, "--net-new") || 0),
         ...(mins ? { actualMinutes: Number(mins) } : {}),
       });
-      console.log(`\x1b[32m✓ submitted\x1b[0m ${id} for QA review.` + (mins ? ` (${mins} min)` : ""));
+      console.log(`submitted ${id} for QA review.` + (mins ? ` (${mins} min)` : ""));
       return;
     }
     default:
       console.log("Guild job CLI. Commands:");
-      console.log("  whoami · apply · login · list · claim <id> · mine · start <id> · submit <id>");
+      console.log("  whoami, apply, login, list, claim <id>, mine, start <id>, submit <id>");
   }
 }
 

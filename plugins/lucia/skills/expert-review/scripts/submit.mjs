@@ -12,7 +12,7 @@
  *   node submit.mjs --get-site --site <id>   read-only: list the site's pages
  *
  * Env:
- *   LUCIA_ADMIN_JWT   (required)  admin Clerk session token (see SKILL.md → Auth)
+ *   LUCIA_ADMIN_JWT   (required)  admin Clerk session token (see SKILL.md -> Auth)
  *   LUCIA_API_URL     (optional)  default https://api.getlucia.ai
  *
  * No dependencies — Node 18+ global fetch only.
@@ -24,11 +24,11 @@ import { login, readCachedToken } from "./login.mjs";
 const API_URL = (process.env.LUCIA_API_URL || "https://api.getlucia.ai").replace(/\/+$/, "");
 
 function die(msg) {
-  console.error(`\x1b[31merror:\x1b[0m ${msg}`);
+  console.error(`error: ${msg}`);
   process.exit(1);
 }
 
-// Token resolution: explicit env override → fresh cache → browser login.
+// Token resolution: explicit env override -> fresh cache -> browser login.
 let token = null;
 async function ensureToken(force = false) {
   if (!force) {
@@ -93,7 +93,7 @@ function readPlan(file) {
 
 function summariseFinding(f) {
   const n = (f.stitches || []).length;
-  const tag = n ? `\x1b[32mPATCH ${n} stitch${n === 1 ? "" : "es"}\x1b[0m` : `\x1b[33mDEVELOPER fix\x1b[0m`;
+  const tag = n ? `PATCH ${n} stitch${n === 1 ? "" : "es"}` : `DEVELOPER fix`;
   return `  [${f.wcagSc || "?"}] ${tag}  ${f.subject || ""}\n      page: ${f.pageUrl}\n      sel:  ${f.selector}`;
 }
 
@@ -116,16 +116,16 @@ async function main() {
   const plan = readPlan(planFile);
 
   const pages = [...new Set(plan.findings.map((f) => f.pageUrl))];
-  console.log(`\nPlan: site \x1b[1m${plan.siteId}\x1b[0m · ${plan.findings.length} finding(s), ${plan.retractions.length} retraction(s)`);
+  console.log(`\nPlan: site ${plan.siteId}, ${plan.findings.length} finding(s), ${plan.retractions.length} retraction(s)`);
   if (plan.reviewer?.name) console.log(`Reviewer: ${plan.reviewer.name}${plan.reviewer.date ? ` (${plan.reviewer.date})` : ""}`);
   console.log("");
   for (const f of plan.findings) console.log(summariseFinding(f));
-  for (const r of plan.retractions) console.log(`  [${r.axeRuleId}] \x1b[31mRETRACT\x1b[0m  ${r.reason || "false-positive Lucia remediation"}\n      page: ${r.pageUrl}`);
+  for (const r of plan.retractions) console.log(`  [${r.axeRuleId}] RETRACT  ${r.reason || "false-positive Lucia remediation"}\n      page: ${r.pageUrl}`);
   console.log("");
 
   if (dryRun) {
     const patched = plan.findings.filter((f) => (f.stitches || []).length).length;
-    console.log(`\x1b[36mdry-run\x1b[0m — nothing submitted. ${patched} would auto-patch, ${plan.findings.length - patched} developer fix(es), ${plan.retractions.length} retraction(s).`);
+    console.log(`dry-run — nothing submitted. ${patched} would auto-patch, ${plan.findings.length - patched} developer fix(es), ${plan.retractions.length} retraction(s).`);
     console.log("Re-run without --dry-run to submit (opens your browser to sign in).");
     return;
   }
@@ -143,8 +143,8 @@ async function main() {
         selector: r.selector, reason: r.reason, reviewer: plan.reviewer?.name,
       });
       if (out.pageId) pageIds.push(out.pageId);
-      const sc = out.score ? `  (score ${out.score.before}→${out.score.after})` : "";
-      console.log(`  \x1b[32m✓\x1b[0m retracted ${r.axeRuleId}${r.selector ? " [" + r.selector + "]" : ""} on ${r.pageUrl}${sc}`);
+      const sc = out.score ? `  (score ${out.score.before}->${out.score.after})` : "";
+      console.log(`  retracted ${r.axeRuleId}${r.selector ? " [" + r.selector + "]" : ""} on ${r.pageUrl}${sc}`);
     }
   }
 
@@ -169,8 +169,8 @@ async function main() {
       // "human-identified".
       ...(f.source ? { source: f.source } : {}),
     });
-    if (out.status === "patched") { patched++; console.log(`  \x1b[32m✓\x1b[0m ${f.wcagSc} patched — ${out.ruleIds.length} stitch(es), violation ${out.violationId}`); }
-    else { manual++; console.log(`  \x1b[33m•\x1b[0m ${f.wcagSc} recorded as developer fix — violation ${out.violationId}`); }
+    if (out.status === "patched") { patched++; console.log(`  ${f.wcagSc} patched — ${out.ruleIds.length} stitch(es), violation ${out.violationId}`); }
+    else { manual++; console.log(`  • ${f.wcagSc} recorded as developer fix — violation ${out.violationId}`); }
   }
 
   if (pages.length) {
@@ -178,11 +178,11 @@ async function main() {
     for (const pageUrl of pages) {
       const out = await mutate("expert.compilePage", { siteId: plan.siteId, pageUrl });
       if (out.pageId) pageIds.push(out.pageId);
-      console.log(`  \x1b[32m✓\x1b[0m compiled ${pageUrl}  (page ${out.pageId})`);
+      console.log(`  compiled ${pageUrl}  (page ${out.pageId})`);
     }
   }
 
-  console.log(`\n\x1b[1mDone.\x1b[0m ${patched} auto-patched, ${manual} developer fix(es), ${plan.retractions.length} retraction(s). Live within ~a few seconds.`);
+  console.log(`\nDone. ${patched} auto-patched, ${manual} developer fix(es), ${plan.retractions.length} retraction(s). Live within ~a few seconds.`);
   for (const pid of [...new Set(pageIds)]) {
     console.log(`Report: https://getlucia.ai/sites/${plan.siteId}/pages/${pid}/detailed`);
   }
