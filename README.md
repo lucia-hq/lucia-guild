@@ -6,7 +6,8 @@ straight from their own Claude Code.
 
 This repository is a Claude Code **plugin + marketplace**. Install it and you get:
 
-- a **`/lucia`** command — the Guild job loop (login, browse, claim, start, submit);
+- a set of **`/lucia:*`** commands — the Guild job loop (`/lucia:login`,
+  `/lucia:jobs`, `/lucia:claim`, `/lucia:start`, `/lucia:submit`);
 - the **`expert-review`** skill — turn a human reviewer's findings document into
   live Lucia fixes (parse findings, locate the element, author a fix, submit);
 - the **`probe`** skill — an agentic assistive-technology tester that drives a real
@@ -14,7 +15,7 @@ This repository is a Claude Code **plugin + marketplace**. Install it and you ge
   interaction- and state-dependent WCAG failures scanners can't reach, **verifies
   every finding deterministically**, and proposes live edge fixes.
 
-New to the Guild? Apply at **getlucia.ai/guild**, then run `/lucia login` to connect
+New to the Guild? Apply at **getlucia.ai/guild**, then run `/lucia:login` to connect
 your Claude Code. A Lucia operator activates you, and the job board opens up.
 
 ## Install
@@ -34,7 +35,7 @@ needs none for a public repo.
 
 ### Using the desktop app (Cowork)?
 
-Cowork runs Claude Code in a remote sandbox, so `/lucia login` — which signs you in
+Cowork runs Claude Code in a remote sandbox, so `/lucia:login` — which signs you in
 through a loopback to a browser on *your* machine — can't complete there yet. **Use
 Claude Code in a terminal** for now; that's where sign-in works. (You can browse and
 install the plugin from Cowork's **Customize → Plugins**, but you'll still need a
@@ -48,17 +49,18 @@ CLI and Cowork, so either install shows up in both.)
 
 ### Manual install (no marketplace)
 
-Prefer not to use the marketplace, or can't? Drop the skills and the `/lucia`
-command straight into your user-level `~/.claude/`:
+Prefer not to use the marketplace, or can't? Drop the skills and the `/lucia:*`
+commands straight into your user-level `~/.claude/`:
 
 ```bash
 git clone https://github.com/lucia-hq/lucia-guild ~/.lucia-guild
-mkdir -p ~/.claude/skills ~/.claude/commands
+mkdir -p ~/.claude/skills ~/.claude/commands/lucia
 cp -r ~/.lucia-guild/plugins/lucia/skills/* ~/.claude/skills/
-cp ~/.lucia-guild/plugins/lucia/commands/lucia.md ~/.claude/commands/lucia.md
+cp ~/.lucia-guild/plugins/lucia/commands/*.md ~/.claude/commands/lucia/
 ```
 
-Then **restart Claude Code** and run `/lucia login`. To update later:
+Then **restart Claude Code** and run `/lucia:login` (the `lucia/` command
+subfolder groups them under `/lucia:`). To update later:
 `git -C ~/.lucia-guild pull`, then re-copy.
 
 ### One-time setup for the `probe` skill
@@ -77,10 +79,10 @@ npx playwright install chromium
 ## Workflow
 
 ```
-/lucia login            # sign in via the browser, connect this Claude Code to your Guild account
-/lucia jobs             # see the open jobs on the board
-/lucia claim <id>       # claim one (first-come)
-/lucia start <id>       # begin work
+/lucia:login            # sign in via the browser, connect this Claude Code to your Guild account
+/lucia:jobs             # see the open jobs on the board
+/lucia:claim <id>       # claim one (first-come)
+/lucia:start <id>       # begin work
 ```
 
 Then audit the job's site and deliver the fixes:
@@ -92,7 +94,7 @@ Then audit the job's site and deliver the fixes:
 3. **Hand it to QA:**
 
    ```
-   /lucia submit <id> --findings <N> --net-new <N>
+   /lucia:submit <id> --findings <N> --net-new <N>
    ```
 
 You can also run `expert-review` on its own when a human reviewer hands you a
@@ -104,7 +106,7 @@ findings document (Word / PDF / Markdown / spreadsheet) and a Lucia siteId.
 .claude-plugin/marketplace.json     the marketplace manifest
 plugins/lucia/
 ├── .claude-plugin/plugin.json      the plugin manifest
-├── commands/lucia.md               the /lucia command
+├── commands/                       the /lucia:* commands (login, jobs, claim, start, submit, …)
 └── skills/
     ├── expert-review/              import a reviewer's findings → live fixes
     └── probe/                      agentic AT-user accessibility tester
