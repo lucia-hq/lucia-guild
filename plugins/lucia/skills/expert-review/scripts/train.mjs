@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 /**
- * Guild TRAINING CLI — a Lucian's guided first audit, runnable before they're
- * activated. Spins up a throwaway demo site, watches Lucia's automated pipeline
- * remediate it, and (via the probe + expert-review skills) lets them practise a
- * human fix and see it live on a preview URL.
+ * Guild TRAINING CLI — the scored assessment a Lucian must pass before they can
+ * be activated. The trainee audits a deliberately-broken demo site; `score`
+ * grades their findings against a hidden server-side key and records the result.
  *
- *   node train.mjs start [url]      create a demo training site + queue the auto pipeline
- *   node train.mjs status <siteId>  poll auto-remediation progress (stage, score, preview)
+ *   node train.mjs score --file findings.json [--site <id>]
+ *        findings.json = JSON array of { selector, category, wcag, note }
+ *        -> grades the Stage-1 audit, returns the score + what they missed
+ *   node train.mjs start [url]        create a practice site to apply a human fix on
  *   node train.mjs complete <siteId>  finish the run
  *
  * Same auth + tRPC plumbing as jobs.mjs (browser login, cached token).
@@ -14,6 +15,7 @@
  */
 
 import { login, readCachedToken } from "./login.mjs";
+import { readFileSync } from "node:fs";
 
 const API_URL = (process.env.LUCIA_API_URL || "https://api.getlucia.ai").replace(/\/+$/, "");
 
@@ -21,6 +23,8 @@ function die(msg) {
   console.error(`error: ${msg}`);
   process.exit(1);
 }
+
+function flag(args, name) { const i = args.indexOf(name); return i >= 0 ? args[i + 1] : undefined; }
 
 let token = null;
 async function ensureToken(force = false) {
@@ -53,7 +57,7 @@ async function trpc(method, path, input, _retried = false) {
   if (entry?.error) {
     const isAuth = res.status === 401 || /UNAUTHORIZED/.test(JSON.stringify(entry.error));
     if (isAuth && !_retried && !process.env.LUCIA_ADMIN_JWT) {
-      console.error("Session expired — re-authenticating in your browser…");
+      console.error("Session expired — re-authenticating in your browser.");
       await ensureToken(true);
       return trpc(method, path, input, true);
     }
@@ -68,40 +72,43 @@ const mutate = (p, i) => trpc("POST", p, i);
 async function main() {
   const [cmd, ...rest] = process.argv.slice(2);
   switch (cmd) {
+    case "score": {
+      const file = flag(rest, "--file");
+      if (!file) die("usage: node train.mjs score --file <findings.json> [--site <id>]");
+      let findings;
+      try { findings = JSON.parse(readFileSync(file, "utf8")); }
+      catch (e) { die(`couldn't read findings file ${file}: ${e.message}`); }
+      if (!Array.isArray(findings)) die("findings file must be a JSON array of {selector, category, wcag, note}");
+      const out = await mutate("training.score", { findings, siteId: flag(rest, "--site") });
+      console.log(`Score: ${out.score} out of 100. ${out.passed ? "Passed." : `Not passed — you need ${out.passThreshold}.`}`);
+      console.log(`You found ${out.found} of ${out.total} issues. Recall ${out.recallPct} percent, precision ${out.precisionPct} percent.`);
+      if (out.falsePositives) console.log(`${out.falsePositives} of your findings did not match a real issue.`);
+      if (out.missed?.length) {
+        console.log(`You missed ${out.missed.length}:`);
+        for (const m of out.missed) console.log(`- ${m.label} (WCAG ${m.wcag})`);
+      }
+      return;
+    }
     case "start": {
       const url = rest.find((a) => !a.startsWith("--"));
       const out = await mutate("training.start", { url: url || undefined });
-      console.log(`training site ready  (${out.isDefaultDemo ? "W3C demo" : out.url})`);
-      console.log(`  siteId:   ${out.siteId}`);
-      console.log(`  preview:  ${out.previewUrl}`);
-      console.log(`  The automated pipeline is now remediating it.`);
-      console.log(`  Watch it: node train.mjs status ${out.siteId}`);
-      return;
-    }
-    case "status": {
-      const id = rest[0];
-      if (!id || id.startsWith("--")) die("usage: node train.mjs status <siteId>");
-      const s = await query("training.status", { siteId: id });
-      console.log(`Progress: ${s.percent || 0}% (${s.status})`);
-      if (s.scoreBefore != null && s.scoreAfter != null) {
-        console.log(`  score: ${s.scoreBefore} -> ${s.scoreAfter}`);
-      }
-      if (s.previewUrl) console.log(`  preview: ${s.previewUrl}`);
-      if (s.status === "done") console.log(`  Auto-remediation complete. Audit it with the probe skill, then submit one human fix.`);
-      if (s.status === "failed") console.log(`  Scan failed. Try \`node train.mjs start\` again (the demo URL, or a simpler page).`);
+      console.log(`Practice site ready.`);
+      console.log(`siteId: ${out.siteId}`);
+      console.log(`preview: ${out.previewUrl}`);
+      console.log(`Apply a fix with the expert-review skill for this siteId, then reload the preview to see it.`);
       return;
     }
     case "complete": {
       const id = rest[0];
       if (!id || id.startsWith("--")) die("usage: node train.mjs complete <siteId>");
       await mutate("training.complete", { siteId: id });
-      console.log(`training complete. Nice work — that's the whole Lucian loop.`);
-      console.log(`A Lucia operator will activate you for real jobs (check: /lucia:whoami).`);
+      console.log(`Training complete.`);
+      console.log(`A Lucia operator will review your score and activate you (check with /lucia:whoami).`);
       return;
     }
     default:
       console.log("Guild training CLI. Commands:");
-      console.log("  start [url], status <siteId>, complete <siteId>");
+      console.log("  score --file <findings.json> [--site <id>], start [url], complete <siteId>");
   }
 }
 

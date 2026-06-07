@@ -1,49 +1,52 @@
 ---
-description: Guided first audit — spin up a demo site, watch it auto-remediate, fix one issue, see it live
-argument-hint: "[url]   (optional; defaults to the W3C accessibility demo)"
+description: Scored training audit — find the accessibility issues on a demo site; you're graded, and passing is required before activation
+argument-hint: ""
 ---
 
-Run the Lucia Guild **training** flow for the user: a guided first audit that ends
-with their own fix live on a preview URL. This works **before activation** — it's
-how a new Lucian learns the loop.
+Run the Lucia Guild **training assessment**. The trainee audits a deliberately-
+broken demo site; you score their findings against a hidden key (server-side, so
+they can't read it) and record the result. **A passing score is required** before
+a Lucia operator can activate them.
 
-Locate this plugin's training CLI `skills/expert-review/scripts/train.mjs` (or
-`.claude/skills/expert-review/scripts/train.mjs`; if unsure,
-`find ~/.claude/plugins -name train.mjs -path '*lucia*' 2>/dev/null | head -1`).
-The `probe` and `expert-review` skills are in this same plugin.
+**Accessibility:** the person doing this may rely on a screen reader. Keep
+everything you print short, plain, and linear — no tables, ASCII art, emoji, or
+decorative symbols. Lead with the key result.
 
-Do these steps in order, narrating clearly and encouragingly:
+Locate this plugin's training CLI `skills/expert-review/scripts/train.mjs` and the
+`probe` skill (both in this plugin; if unsure,
+`find ~/.claude/plugins -name train.mjs -path '*lucia*'`).
 
-1. **Start.** Run `node <train.mjs> start $ARGUMENTS`. It creates a demo training
-   site (defaults to the W3C before/after demo), queues Lucia's full automated
-   remediation, and prints a `siteId` and a live `previewUrl`. Tell the user
-   what's happening.
+Steps:
 
-2. **Watch the robots work.** Poll `node <train.mjs> status <siteId>` every ~5s
-   until `status` is `done` (100%). Report the before→after score. Open the
-   `previewUrl` and point out a couple of the automated fixes (alt text, labels,
-   contrast) — explain Lucia's pipeline (Mirror→Inspector→Mender→Forge→Witness)
-   just handled the mechanical issues.
+1. **Set the task — don't give it away.** Tell the trainee: "Here's a website.
+   Audit it for accessibility problems and tell me what you find." The site is
+   **https://getlucia.ai/training-demo**. Do NOT say how many issues there are,
+   what categories they fall in, or that the page is special in any way. This is
+   their test.
 
-3. **Find what the robots can't.** Use the **`probe`** skill against the preview
-   URL to find ONE interaction/state-dependent issue a scanner misses — a
-   keyboard trap, a broken focus order, an unlabelled custom control, a missing
-   live-region announcement. Explain why a human is needed for it.
+2. **Let them find and explain first.** Ask the trainee what problems they
+   notice and to explain *why* each is a barrier (who it affects). Let them lead.
+   Then use the **`probe`** skill to drive a real browser over the page and
+   confirm/expand — but don't just hand them the answers; coach.
 
-4. **Fix it.** Use the **`expert-review`** skill to author and submit that one fix
-   for this `siteId` (it previews the plan and asks for explicit approval before
-   publishing). The trainee is authorized to patch this training site.
+3. **Collect findings.** Build a list of what they (with probe) identified. For
+   each: the element's CSS selector if you have one, a category (image-alt,
+   label, contrast, link-text, button-name, link-name, keyboard, aria, dialog,
+   heading-order, landmark, skip-link, table-headers, lang, title), and the WCAG
+   criterion if known. Write it to a temp JSON file — an array of
+   `{ "selector": "...", "category": "...", "wcag": "...", "note": "..." }`.
 
-5. **See it live.** Re-open the `previewUrl` and show the trainee their fix in
-   place alongside the automated ones. That's the whole job, start to finish.
+4. **Score it.** Run:
+   `node <train.mjs> score --file <that-file.json>`
+   Report the result plainly: their score out of 100, pass or not, how many of
+   the issues they caught, recall and precision.
 
-6. **Finish.** Run `node <train.mjs> complete <siteId>` and congratulate them.
-   Tell them a Lucia operator will activate them for real jobs (`/lucia:whoami`
-   shows status).
+5. **Teach from the misses.** The command prints what they MISSED (revealed only
+   now, after they've submitted — never before). Walk through each missed issue
+   briefly: what it is, who it affects, how you'd fix it.
 
-Keep it warm and concise — this is their first taste of the work.
+6. **Close.** If they passed, tell them they've met the training requirement and
+   a Lucia operator will activate them. If not, encourage another attempt focused
+   on the categories they missed — they can re-run any time.
 
-
----
-
-**Accessibility — keep output clean for screen readers.** The person using this may rely on a screen reader. Keep everything you print short and plain: linear single-idea lines, no tables, ASCII art, emoji, progress bars, box-drawing, or decorative symbols. Lead with the essential result and skip preamble.
+Be encouraging and concise. This is an assessment, but also their first lesson.
