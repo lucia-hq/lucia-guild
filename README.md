@@ -26,6 +26,28 @@ In Claude Code:
 /plugin install lucia@lucia-guild
 ```
 
+### No `/plugin` command?
+
+`/plugin` needs a recent Claude Code **and an interactive terminal**. If you see
+**"/plugin isn't available in this environment"**: update Claude Code
+(`npm i -g @anthropic-ai/claude-code@latest`, or `brew upgrade claude-code`) and
+**restart** it. Note that `/plugin` is disabled inside non-interactive / SDK /
+agent sessions — run it in a normal `claude` terminal.
+
+### Manual install (no marketplace)
+
+Prefer not to use the marketplace, or can't? Drop the skills and the `/lucia`
+command straight into your user-level `~/.claude/`:
+
+```bash
+git clone https://github.com/lucia-hq/lucia-guild ~/.lucia-guild
+mkdir -p ~/.claude/skills ~/.claude/commands
+cp -r ~/.lucia-guild/plugins/lucia/skills/* ~/.claude/skills/
+cp ~/.lucia-guild/plugins/lucia/commands/lucia.md ~/.claude/commands/lucia.md
+```
+
+Then **restart Claude Code** and run `/lucia login`. To update later:
+`git -C ~/.lucia-guild pull`, then re-copy.
 
 ### One-time setup for the `probe` skill
 
