@@ -94,7 +94,7 @@ async function main() {
       const me = await query("experts.me", undefined);
       if (!me) { console.log("Not a Lucian yet. Apply with: node jobs.mjs apply"); return; }
       console.log(`\x1b[1m${me.displayName || me.email}\x1b[0m — ${me.tier} · status=${me.status}`);
-      console.log(`Claude Code: ${me.claudeConnectedAt ? "connected ✓" : "\x1b[33mNOT connected\x1b[0m — run: node jobs.mjs connect"}`);
+      console.log(`Claude Code: ${me.claudeConnectedAt ? "connected ✓" : "\x1b[33mNOT connected\x1b[0m — run: /lucia login"}`);
       return;
     }
     case "apply": {
@@ -106,7 +106,7 @@ async function main() {
         specializations: specs ? specs.split(",").map((s) => s.trim()).filter(Boolean) : undefined,
       });
       console.log(`Applied to the Guild. status=${out?.status ?? "applied"}.`);
-      console.log("Next: node jobs.mjs connect  (then a Lucia operator activates you).");
+      console.log("Next: /lucia login  (signs in + connects this Claude Code; then a Lucia operator activates you).");
       return;
     }
     case "login": {
