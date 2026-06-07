@@ -7,7 +7,9 @@ straight from their own Claude Code.
 This repository is a Claude Code **plugin + marketplace**. Install it and you get:
 
 - a set of **`/lucia:*`** commands — the Guild job loop (`/lucia:login`,
-  `/lucia:jobs`, `/lucia:claim`, `/lucia:start`, `/lucia:submit`);
+  `/lucia:jobs`, `/lucia:claim`, `/lucia:start`, `/lucia:submit`), plus
+  **`/lucia:train`** — a guided first audit on a demo site, runnable before
+  you're activated, that ends with your fix live on a preview URL;
 - the **`expert-review`** skill — turn a human reviewer's findings document into
   live Lucia fixes (parse findings, locate the element, author a fix, submit);
 - the **`probe`** skill — an agentic assistive-technology tester that drives a real
@@ -16,7 +18,8 @@ This repository is a Claude Code **plugin + marketplace**. Install it and you ge
   every finding deterministically**, and proposes live edge fixes.
 
 New to the Guild? Apply at **getlucia.ai/guild**, then run `/lucia:login` to connect
-your Claude Code. A Lucia operator activates you, and the job board opens up.
+your Claude Code and **`/lucia:train`** for a guided first audit (no activation
+needed). A Lucia operator then activates you, and the job board opens up.
 
 ## Install
 
