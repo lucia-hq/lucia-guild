@@ -89,6 +89,23 @@ async function main() {
       }
       return;
     }
+    case "validate": {
+      const file = flag(rest, "--file");
+      if (!file) die("usage: node train.mjs validate --file <findings.json> [--site <id>]");
+      let findings;
+      try { findings = JSON.parse(readFileSync(file, "utf8")); }
+      catch (e) { die(`couldn't read findings file ${file}: ${e.message}`); }
+      if (!Array.isArray(findings)) die("findings file must be a JSON array of {selector, category, note}");
+      const out = await mutate("training.validate", { findings, siteId: flag(rest, "--site") });
+      console.log(`Validation score: ${out.score} out of 100. ${out.passed ? "Passed." : `Not passed — you need ${out.passThreshold}.`}`);
+      console.log(`You caught ${out.caught} of ${out.total} machine mistakes. Recall ${out.recallPct} percent, precision ${out.precisionPct} percent.`);
+      if (out.falsePositives) console.log(`${out.falsePositives} of your flags were on fixes that were actually fine.`);
+      if (out.missed?.length) {
+        console.log(`You missed ${out.missed.length}:`);
+        for (const m of out.missed) console.log(`- ${m.label}`);
+      }
+      return;
+    }
     case "start": {
       const url = rest.find((a) => !a.startsWith("--"));
       const out = await mutate("training.start", { url: url || undefined });
@@ -108,7 +125,7 @@ async function main() {
     }
     default:
       console.log("Guild training CLI. Commands:");
-      console.log("  score --file <findings.json> [--site <id>], start [url], complete <siteId>");
+      console.log("  score --file <f.json>, validate --file <f.json>, start [url], complete <siteId>");
   }
 }
 
