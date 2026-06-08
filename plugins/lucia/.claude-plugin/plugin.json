@@ -1,5 +1,4 @@
 {
   "name": "lucia",
-  "description": "Lucia Guild — start with /lucia:welcome, then /lucia:train. Claim and deliver web-accessibility audit jobs from Claude Code.",
-  "version": "0.2.0"
+  "description": "Lucia Guild — start with /lucia:welcome, then /lucia:train. Claim and deliver web-accessibility audit jobs from Claude Code."
 }

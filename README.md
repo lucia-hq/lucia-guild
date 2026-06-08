@@ -36,6 +36,17 @@ URL matters: the `owner/repo` shorthand makes Claude Code clone over **SSH**, wh
 fails if you don't have GitHub SSH keys (`Permission denied (publickey)`) — HTTPS
 needs none for a public repo.
 
+**Updating to the latest:**
+
+```
+/plugin update lucia@lucia-guild
+/reload-plugins
+```
+
+(`/plugin marketplace update` only refreshes the catalog — `/plugin update` is what
+pulls a new plugin build.) The plugin isn't version-pinned, so every push is the
+latest; `/plugin update` always fetches it.
+
 ### Using the desktop app (Cowork)?
 
 Cowork runs Claude Code in a remote sandbox, so `/lucia:login` — which signs you in
