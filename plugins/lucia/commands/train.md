@@ -1,77 +1,74 @@
 ---
-description: Scored training audit — find the accessibility issues on a demo site; you're graded, and passing is required before activation
+description: Scored training assessment — the trainee finds the issues themselves; you proctor and score. Passing both stages is required before activation.
 argument-hint: ""
 ---
 
-Run the Lucia Guild **training assessment** — two stages a trainee must pass
-before a Lucia operator can activate them: **Stage 1 (audit)** — find the issues
-on a broken site; **Stage 2 (validate)** — catch the mistakes the auto-fixer made
-on a second site. You score each against a hidden key (server-side, so they can't
-read it) and record the result. **Passing both is required** for activation.
+Run the Lucia Guild **training assessment**. This is a GRADED TEST of the
+**trainee's own** ability. You are a **neutral proctor** — not a tutor, not a
+co-auditor, not a hint-giver.
+
+## Proctor rules — read first, follow strictly
+
+This is the trainee's exam. While they are auditing, you MUST NOT:
+
+- open, fetch, render, screenshot, read, or analyse the page yourself;
+- run the `probe` skill or any other automated audit — it would find the issues
+  *for* them and void the test;
+- name, list, describe, hint at, or rank any issue on the page;
+- tell them whether a finding is right, wrong, partial, or whether they're "done";
+- suggest what categories to look for, or say how many issues remain.
+
+Your ONLY job while they work is to **write down what THEY report**, then score
+it. You reveal answers ONLY after they have submitted and been scored. If they
+ask "is that right?" or "how many are there?", say you'll give the score at the
+end — and nothing more.
+
+**Accessibility:** the trainee may use a screen reader. Keep every message short,
+plain, and linear — no tables, ASCII art, emoji, or decorative symbols.
+
+Two stages; passing **both** (score ≥ 70 each) is required for activation.
 
 ## Stage 1 — audit
 
-**Accessibility:** the person doing this may rely on a screen reader. Keep
-everything you print short, plain, and linear — no tables, ASCII art, emoji, or
-decorative symbols. Lead with the key result.
+1. **Hand over the task, nothing more.** Say: "Open this page and audit it for
+   accessibility problems. Tell me each issue you find — where it is, what's
+   wrong, and the WCAG criterion if you know it. Say when you're done." The page
+   is **https://getlucia.ai/training-demo**. Say nothing else about it — not how
+   many issues, not what kinds. Then wait for them.
 
-Locate this plugin's training CLI `skills/expert-review/scripts/train.mjs` and the
-`probe` skill (both in this plugin; if unsure,
-`find ~/.claude/plugins -name train.mjs -path '*lucia*'`).
+2. **Take down their findings, silently.** As they report issues, record each:
+   the element (a CSS selector if they give one), a short category, the WCAG
+   number if they state it. Do not react to whether it's correct. When they say
+   they're finished, ask once "Anything else?" then stop — do not prompt with
+   examples or categories.
 
-Steps:
-
-1. **Set the task — don't give it away.** Tell the trainee: "Here's a website.
-   Audit it for accessibility problems and tell me what you find." The site is
-   **https://getlucia.ai/training-demo**. Do NOT say how many issues there are,
-   what categories they fall in, or that the page is special in any way. This is
-   their test.
-
-2. **Let them find and explain first.** Ask the trainee what problems they
-   notice and to explain *why* each is a barrier (who it affects). Let them lead.
-   Then use the **`probe`** skill to drive a real browser over the page and
-   confirm/expand — but don't just hand them the answers; coach.
-
-3. **Collect findings.** Build a list of what they (with probe) identified. For
-   each: the element's CSS selector if you have one, a category (image-alt,
-   label, contrast, link-text, button-name, link-name, keyboard, aria, dialog,
-   heading-order, landmark, skip-link, table-headers, lang, title), and the WCAG
-   criterion if known. Write it to a temp JSON file — an array of
-   `{ "selector": "...", "category": "...", "wcag": "...", "note": "..." }`.
-
-4. **Score it.** Run:
+3. **Score it.** Write THEIR findings (only theirs) to a temp JSON file — an array
+   of `{ "selector": "...", "category": "...", "wcag": "...", "note": "..." }` —
+   and run (CLI at `skills/expert-review/scripts/train.mjs`):
    `node <train.mjs> score --file <that-file.json>`
-   Report the result plainly: their score out of 100, pass or not, how many of
-   the issues they caught, recall and precision.
 
-5. **Teach from the misses.** The command prints what they MISSED (revealed only
-   now, after they've submitted — never before). Walk through each missed issue
-   briefly: what it is, who it affects, how you'd fix it.
+4. **Now — and only now — teach.** Read back their score, pass/fail, and how many
+   they caught. The command prints what they MISSED; reveal and explain those
+   briefly: what each is, who it affects, how you'd fix it.
 
-6. **Move to Stage 2** once they've done the audit.
+5. Move to Stage 2.
 
 ## Stage 2 — validate the machine's fixes
 
-7. **New site, already "fixed."** Tell the trainee: "Lucia's automated pipeline
-   has already remediated this next site — review its work: confirm the good fixes
-   and flag anything it got wrong." The site is
-   **https://getlucia.ai/training-validate**. Do NOT say how many mistakes there
-   are. Some fixes are correct; some are deliberately wrong.
+6. **Same proctor rules apply.** Say: "Lucia's automated pipeline already
+   remediated this next page. Review its work and tell me anything it got wrong —
+   only the bad fixes; leave the good ones alone. Say when you're done." The page
+   is **https://getlucia.ai/training-validate**. Don't say how many mistakes there
+   are. Do not analyse it or run probe — take down only what THEY flag.
 
-8. **Review.** With `probe` and the trainee, go over the fixes. Coach them to spot
-   the *bad* fixes — a generic or wrong alt, a mislabelled field, a still-too-low
-   contrast, a role added without keyboard support, a broken skip-link target, an
-   `aria-hidden` on something focusable. They should flag ONLY the bad fixes, not
-   the good ones (flagging a good fix counts against them).
+7. **Take down their flags, silently** (as in step 2).
 
-9. **Score it.** Collect their flags to a temp JSON file (same `{selector,
-   category, note}` shape) and run:
+8. **Score it.** Write their flags to a temp JSON file and run:
    `node <train.mjs> validate --file <that-file.json>`
-   Report plainly: score out of 100, pass or not, how many mistakes they caught,
-   and whether they wrongly flagged any good fixes. Walk through what they missed.
+   Read back the score, then reveal what they missed.
 
-10. **Close.** Activation requires passing BOTH stages. If they've passed both,
-    tell them they've met the training requirement and a Lucia operator will
-    activate them. If not, point them at the stage they need to retry.
+9. **Close.** Activation requires passing both stages. If they passed both, tell
+   them they've met the requirement and a Lucia operator will activate them. If
+   not, tell them which stage to retry — they can re-run any time.
 
-Be encouraging and concise. This is an assessment, but also their first lessons.
+Be warm but neutral. The point is to measure what THEY can do.
