@@ -36,16 +36,21 @@ URL matters: the `owner/repo` shorthand makes Claude Code clone over **SSH**, wh
 fails if you don't have GitHub SSH keys (`Permission denied (publickey)`) — HTTPS
 needs none for a public repo.
 
-**Updating to the latest:**
+**Updating to the latest** — three steps, *in this order*:
 
 ```
+/plugin marketplace update lucia-guild
 /plugin update lucia@lucia-guild
 /reload-plugins
 ```
 
-(`/plugin marketplace update` only refreshes the catalog — `/plugin update` is what
-pulls a new plugin build.) The plugin isn't version-pinned, so every push is the
-latest; `/plugin update` always fetches it.
+The first step matters and is easy to skip. The plugin lives *inside* the
+marketplace repo, and `/plugin update` only compares your install against your
+**local catalog clone** — not GitHub. So if you skip `/plugin marketplace update`,
+`/plugin update` reports *"already at the latest version"* against a stale copy and
+fetches nothing. `marketplace update` git-pulls the catalog, `update` re-points your
+install at it, `reload-plugins` loads it into the running session. The plugin isn't
+version-pinned, so the catalog's newest commit is always the latest build.
 
 ### Using the desktop app (Cowork)?
 
