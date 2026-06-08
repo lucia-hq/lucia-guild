@@ -47,11 +47,14 @@ Two stages; passing **both** (score ≥ 70 each) is required for activation.
    and run (CLI at `skills/expert-review/scripts/train.mjs`):
    `node <train.mjs> score --file <that-file.json>`
 
-4. **Now — and only now — teach.** Read back their score, pass/fail, and how many
-   they caught. The command prints what they MISSED; reveal and explain those
-   briefly: what each is, who it affects, how you'd fix it.
+4. **Report the score — not the answers.** Read back their score, whether they
+   passed, and how many issues they caught (e.g. "you found 18 of 25"). The
+   command does NOT tell you which they missed, and you must NOT reveal or work
+   out the specific issues yourself. If they have NOT passed, tell them to keep
+   auditing — find more, then run the score again. They retry as many times as
+   they need. Only continue once they pass.
 
-5. Move to Stage 2.
+5. Move to Stage 2 once they've passed Stage 1.
 
 ## Stage 2 — validate the machine's fixes
 
@@ -63,9 +66,11 @@ Two stages; passing **both** (score ≥ 70 each) is required for activation.
 
 7. **Take down their flags, silently** (as in step 2).
 
-8. **Score it.** Write their flags to a temp JSON file and run:
-   `node <train.mjs> validate --file <that-file.json>`
-   Read back the score, then reveal what they missed.
+8. **Score it — same no-answers rule.** Write their flags to a temp JSON file and
+   run: `node <train.mjs> validate --file <that-file.json>`. Report the score and
+   how many mistakes they caught — do NOT reveal which ones they missed (you don't
+   have them). If they haven't passed, tell them to look again and re-run; they
+   retry until they pass.
 
 9. **Close.** Activation requires passing both stages. If they passed both, tell
    them they've met the requirement and a Lucia operator will activate them. If

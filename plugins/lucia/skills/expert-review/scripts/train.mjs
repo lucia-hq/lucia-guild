@@ -80,13 +80,10 @@ async function main() {
       catch (e) { die(`couldn't read findings file ${file}: ${e.message}`); }
       if (!Array.isArray(findings)) die("findings file must be a JSON array of {selector, category, wcag, note}");
       const out = await mutate("training.score", { findings, siteId: flag(rest, "--site") });
-      console.log(`Score: ${out.score} out of 100. ${out.passed ? "Passed." : `Not passed — you need ${out.passThreshold}.`}`);
+      console.log(`Score: ${out.score} out of 100. ${out.passed ? "Passed." : `Not passed yet — you need ${out.passThreshold}.`}`);
       console.log(`You found ${out.found} of ${out.total} issues. Recall ${out.recallPct} percent, precision ${out.precisionPct} percent.`);
       if (out.falsePositives) console.log(`${out.falsePositives} of your findings did not match a real issue.`);
-      if (out.missed?.length) {
-        console.log(`You missed ${out.missed.length}:`);
-        for (const m of out.missed) console.log(`- ${m.label} (WCAG ${m.wcag})`);
-      }
+      if (!out.passed) console.log(`Keep auditing — find the ones you missed, then run score again. The answers are not given.`);
       return;
     }
     case "validate": {
@@ -97,13 +94,10 @@ async function main() {
       catch (e) { die(`couldn't read findings file ${file}: ${e.message}`); }
       if (!Array.isArray(findings)) die("findings file must be a JSON array of {selector, category, note}");
       const out = await mutate("training.validate", { findings, siteId: flag(rest, "--site") });
-      console.log(`Validation score: ${out.score} out of 100. ${out.passed ? "Passed." : `Not passed — you need ${out.passThreshold}.`}`);
+      console.log(`Validation score: ${out.score} out of 100. ${out.passed ? "Passed." : `Not passed yet — you need ${out.passThreshold}.`}`);
       console.log(`You caught ${out.caught} of ${out.total} machine mistakes. Recall ${out.recallPct} percent, precision ${out.precisionPct} percent.`);
       if (out.falsePositives) console.log(`${out.falsePositives} of your flags were on fixes that were actually fine.`);
-      if (out.missed?.length) {
-        console.log(`You missed ${out.missed.length}:`);
-        for (const m of out.missed) console.log(`- ${m.label}`);
-      }
+      if (!out.passed) console.log(`Keep reviewing — find the bad fixes you missed, then run validate again. The answers are not given.`);
       return;
     }
     case "start": {
