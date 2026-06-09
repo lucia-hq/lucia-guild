@@ -107,7 +107,7 @@ function openBrowser(url) {
   const chrome = resolveChrome();
   if (chrome) {
     try {
-      spawn(chrome, [`--app=${url}`, "--window-size=480,760"], { stdio: "ignore", detached: true }).unref();
+      spawn(chrome, [`--app=${url}`, "--window-size=380,500"], { stdio: "ignore", detached: true }).unref();
       return;
     } catch { /* fall through to the default opener */ }
   }
