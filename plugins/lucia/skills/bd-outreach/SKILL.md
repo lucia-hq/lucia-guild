@@ -129,6 +129,15 @@ for full conformance" close — strictly from the returned evidence. **Don't
 hand-roll a pptx script**; this one handles the pptxgenjs (CommonJS) import +
 layout for you. Save it where the Lucian can grab it, then offer to tweak wording.
 
+**Marketing microsite (a shareable link)** — every scanned prospect also gets a
+public, branded one-pager with the **live before/after** of their own page, the
+score lift, the findings and the value prop. `node scripts/bd.mjs summary
+<targetId>` prints its `share page` URL (`https://getlucia.ai/pitch/<targetId>`).
+Nothing to build or host — it renders server-side. Hand the Lucian the link to
+drop into the email, a DM, or a follow-up; it's the same honest before/after as
+the deck, just interactive and web-native. The id is unguessable, so it's only
+seen by whoever the Lucian shares it with.
+
 ### 6. Send (gated)
 Record the prospect contact (the recipient's domain must match the scanned
 prospect — you can only email a company you actually scanned):

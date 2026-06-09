@@ -140,6 +140,7 @@ async function main() {
       console.log(`${out.hostname}`);
       console.log(`  score: ${out.scoreBefore ?? "?"} -> ${out.scoreAfter ?? "?"} (out of 100)`);
       console.log(`  preview: ${out.previewUrl ?? "(none)"}`);
+      if (out.pitchUrl) console.log(`  share page (live before/after, branded): ${out.pitchUrl}`);
       console.log(`  evidence pack siteId: ${out.evidencePack.siteId}  (fetch reports.evidencePack {siteId})`);
       console.log(`  headline findings:`);
       printFindings(out.findings);
