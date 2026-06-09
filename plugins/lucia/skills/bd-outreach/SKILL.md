@@ -24,7 +24,10 @@ The CLI is `scripts/bd.mjs` (find it with
 `find ~/.claude/plugins -name bd.mjs -path '*lucia*' 2>/dev/null | head -1` if
 the relative path doesn't resolve). It uses the same browser sign-in as the
 rest of the Guild; if the Lucian isn't signed in it'll open their browser. The
-Lucian must be an **active** Guild member.
+Lucian must be **BD-approved** — an independent approval from tester activation
+(no training required) that an operator grants in the admin Lucians screen. If
+they're not approved yet, the CLI returns a clear "BD approval required" message
+— relay it and point them to a Lucia operator.
 
 ## The six stages
 

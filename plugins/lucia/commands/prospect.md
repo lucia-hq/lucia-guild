@@ -1,7 +1,7 @@
 ---
 description: Prospect for Lucia — guided outbound BD (find, scan, pitch)
 ---
-Guide the user (an active Guild Lucian) through a **business-development /
+Guide the user (a BD-approved Guild Lucian) through a **business-development /
 outbound prospecting journey for Lucia** using the **bd-outreach skill**.
 
 Invoke the `bd-outreach` skill and follow it. The journey is conversational —
