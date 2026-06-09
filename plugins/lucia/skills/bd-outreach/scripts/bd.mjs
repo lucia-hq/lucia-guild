@@ -11,8 +11,8 @@
  *   node bd.mjs summary <targetId>                           headline findings + scores + preview for pitch copy
  *   node bd.mjs deck-data <targetId>                         structured evidence for a PPTX deck
  *   node bd.mjs recipient <targetId> <email> [--name ".."]   record the prospect contact (domain must match)
- *   node bd.mjs email <targetId> [--region us|uk|eu] [--name ".."]   generate the pitch email (no send)
- *   node bd.mjs send <targetId> --hash <bodyHash> [--region ..]      SEND (gated; off until the operator enables it)
+ *   node bd.mjs email <targetId> [--region us|uk|eu] [--tone commercial|mission] [--name ".."]   generate the pitch email (no send)
+ *   node bd.mjs send <targetId> --hash <bodyHash> [--region ..] [--tone ..]      SEND (gated; off until the operator enables it)
  *   node bd.mjs mine                                         your BD dashboard (prospects + send history)
  *
  * The journey: start -> (Claude researches targets) -> recon each -> scan up to
@@ -162,9 +162,9 @@ async function main() {
     }
     case "email": {
       const id = rest[0];
-      if (!id || id.startsWith("--")) die("usage: node bd.mjs email <targetId> [--region us|uk|eu] [--name \"..\"]");
+      if (!id || id.startsWith("--")) die("usage: node bd.mjs email <targetId> [--region us|uk|eu] [--tone commercial|mission] [--name \"..\"]");
       const out = await query("bd.generateEmail", {
-        targetId: id, region: flag(rest, "--region"), prospectName: flag(rest, "--name"),
+        targetId: id, region: flag(rest, "--region"), prospectName: flag(rest, "--name"), tone: flag(rest, "--tone"),
       });
       console.log(`From: ${out.fromAddress}`);
       console.log(`Subject: ${out.subject}`);
@@ -173,14 +173,15 @@ async function main() {
       console.log("");
       console.log(`(bodyHash for sending: ${out.bodyHash})`);
       console.log(`To send once a recipient is recorded: node bd.mjs send ${id} --hash ${out.bodyHash}` +
-        (flag(rest, "--region") ? ` --region ${flag(rest, "--region")}` : ""));
+        (flag(rest, "--region") ? ` --region ${flag(rest, "--region")}` : "") +
+        (flag(rest, "--tone") ? ` --tone ${flag(rest, "--tone")}` : ""));
       return;
     }
     case "send": {
       const id = rest[0];
       const hash = flag(rest, "--hash");
-      if (!id || id.startsWith("--") || !hash) die("usage: node bd.mjs send <targetId> --hash <bodyHash> [--region us|uk|eu]");
-      const out = await mutate("bd.sendPitch", { targetId: id, bodyHash: hash, region: flag(rest, "--region") });
+      if (!id || id.startsWith("--") || !hash) die("usage: node bd.mjs send <targetId> --hash <bodyHash> [--region us|uk|eu] [--tone commercial|mission]");
+      const out = await mutate("bd.sendPitch", { targetId: id, bodyHash: hash, region: flag(rest, "--region"), tone: flag(rest, "--tone") });
       if (out.status === "sent") {
         console.log(`sent to ${out.toAddress} from ${out.fromAddress}.`);
       } else if (out.status === "blocked_disabled") {

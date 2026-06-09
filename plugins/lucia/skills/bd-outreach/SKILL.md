@@ -32,9 +32,9 @@ Lucian must be an **active** Guild member.
 Ask what they want to target — **sector, geography, company size**, anything to
 exclude. Nudge toward where the accessibility legal wedge is strongest and the
 buyers are most receptive: **consumer-facing e-commerce, retail, hospitality
-and travel** brands in the **US, UK and EU**. Some organisations are off-limits
-for this kind of outreach — see *Who NOT to target* in stage 2. Don't
-interrogate; two or three exchanges is plenty. Then start the journey:
+and travel** brands in the **US, UK and EU**. The Lucian can approach any kind
+of organisation, though — just match the *approach* to who they are (stage 2).
+Don't interrogate; two or three exchanges is plenty. Then start the journey:
 
 ```
 node scripts/bd.mjs start --sector "..." --geo "..." --size "..."
@@ -49,21 +49,18 @@ shortlist of ~5–10 real companies that fit, each with a one-line reason. Favou
 the high-wedge segments above. **Present the shortlist and let the Lucian choose
 who to pursue — nothing is scanned or contacted without their explicit pick.**
 
-**Who NOT to target.** A cold pitch that names accessibility law as context is
-the wrong approach for some organisations. Do **not** put these on the shortlist
-(and steer the Lucian off them if they ask):
-- government / public sector, emergency services, the military;
-- hospitals, clinics, healthcare providers, crisis or mental-health services;
-- schools, universities, and anything aimed at children;
-- charities, nonprofits, religious or political organisations;
-- disability or accessibility organisations themselves;
-- individuals' personal sites, and anyone clearly small enough that the legal
-  framing would land as a threat rather than a helpful heads-up.
+**Match the approach to the organisation.** The Lucian can target whoever they
+like — but be sensitive to *who they are*, because the right pitch differs:
+- **Commercial / consumer brands** (retail, e-commerce, hospitality, travel,
+  SaaS): the default. Lead with the accessibility win; the competitive angle and
+  a light touch of legal *context* are fair game (`--tone commercial`).
+- **Mission-driven / public-interest orgs** (charities, nonprofits, healthcare,
+  education, government): lead **purely** with the good news — you can help more
+  of the people they serve use their site. Drop the legal angle entirely; a
+  "you might get sued" framing is the wrong note (`--tone mission`).
 
-Target **private, commercial, consumer-facing businesses** — brands that buy this
-as a competitive and operational win, not vulnerable or public-interest bodies.
-If a request strays into the above, say why and offer an adjacent commercial
-segment instead.
+Whatever the target, the pitch leads with **"good news — we made your site more
+accessible,"** never a threat.
 
 ### 3. Recon (quick profile per prospect)
 For each shortlisted prospect, confirm it's a real, live public site and grab
@@ -102,17 +99,18 @@ This gives the specific WCAG findings, the score lift, the preview link, and an
 **Email** — generate the outbound email from the *real* scan data:
 
 ```
-node scripts/bd.mjs email <targetId> --region us|uk|eu
+node scripts/bd.mjs email <targetId> --region us|uk|eu --tone commercial|mission
 ```
 
-It prints the subject + body + a `bodyHash`. The copy is deliberately
-value-first and accurate: it leads with the live fixed preview of *their* page,
-names the specific findings, frames the relevant law (ADA/Unruh, UK Equality
-Act, EU EAA) as **context** (never "you'll be sued"), and explicitly says the
-preview is a *demonstration of automated fixes, not a claim of full
-compliance*. **Don't rewrite it to overclaim.** If the Lucian wants tweaks,
-keep it honest and calibrated — and note that the send re-verifies the body, so
-material edits mean re-generating.
+Pick `--tone commercial` (default) or `--tone mission` to fit the organisation
+(stage 2). It prints the subject + body + a `bodyHash`. The copy **leads with
+the good news** — a live before/after of *their* page and the measured score
+lift — names the specific findings, and only in commercial tone frames the
+relevant law (ADA/Unruh, UK Equality Act, EU EAA) as **context** (never "you'll
+be sued"). It always says the preview is a *demonstration of automated fixes,
+not a claim of full compliance*. **Don't rewrite it to overclaim.** The send
+re-verifies the body, so material edits — including a different `--tone` — mean
+re-generating; pass the **same** `--tone` to `send`.
 
 **Deck** — build a short PPTX from the real evidence. Get the structured data:
 
@@ -147,11 +145,13 @@ with ready-to-send assets.
 ## Rules (important)
 - **Accurate, never spammy.** No fabricated findings, no "now compliant", no
   legal scare tactics. If a scan didn't surface much, say so.
-- **Target appropriately.** Only private, commercial, consumer-facing
-  businesses. Never government, healthcare, emergency services,
-  education/children, charities, or religious/political orgs — the legal-context
-  framing is inappropriate for them (see *Who NOT to target*). You propose the
-  shortlist; the Lucian explicitly approves every scan and every send.
+- **Match the approach to the org.** The Lucian can target any kind of
+  organisation; adapt the tone (see *Match the approach to the organisation*).
+  Commercial brands get the competitive + light legal context; mission-driven /
+  public-interest orgs (charities, healthcare, schools, government) get a pure
+  "we can make your site more accessible for the people you serve" — no legal
+  angle. Always lead with the good news. You propose the shortlist; the Lucian
+  approves every scan and send.
 - **One pitch per prospect.** The system dedupes; don't try to re-send.
 - **Respect the caps.** 5 scans per journey; per-Lucian daily/weekly send
   limits. They're there on purpose.

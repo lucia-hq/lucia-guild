@@ -10,16 +10,18 @@ take the user from "who do I target" to "send the pitch":
 1. **Targeting** — ask, conversationally, what kind of companies to target
    (sector, geography, size). Nudge toward consumer e-commerce / retail /
    hospitality in the US/UK/EU where the accessibility legal wedge is strongest.
-2. **Find targets** — research and propose a shortlist of suitable prospects;
-   the user picks who to pursue. Private, commercial, consumer-facing businesses
-   only — never government, healthcare, emergency, schools/children, charities,
-   or political/religious orgs.
+2. **Find targets** — research and propose a shortlist; the user picks who to
+   pursue. They can target any kind of organisation — match the *approach* to
+   who they are (commercial brands: competitive + light legal context;
+   charities/healthcare/schools/government: lead purely with the inclusion
+   benefit, no legal angle).
 3. **Recon** — quick profile of each (real site, stack, likely exposure).
 4. **Test scans** — run Lucia scans, **max 5 per journey** (enforced
    server-side): before/after score, headline WCAG findings, live preview,
    evidence pack.
-5. **Pitch assets** — generate an accurate, value-first outbound **email** and
-   build a **PPTX deck** from the real evidence (use the pptx skill). Never
+5. **Pitch assets** — generate an accurate **email** (leads with the good news,
+   "we made your site more accessible"; `--tone commercial|mission` to fit the
+   org) and a **PPTX deck** from the real evidence (use the pptx skill). Never
    overclaim "now compliant".
 6. **Send** — email the pitch from the Lucian's `<username>@getlucia.ai`,
    replies routed to their real inbox.

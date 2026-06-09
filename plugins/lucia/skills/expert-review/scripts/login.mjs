@@ -15,8 +15,8 @@
 
 import http from "node:http";
 import { randomBytes } from "node:crypto";
-import { spawn } from "node:child_process";
-import { writeFileSync, readFileSync, mkdirSync } from "node:fs";
+import { spawn, spawnSync } from "node:child_process";
+import { writeFileSync, readFileSync, mkdirSync, existsSync } from "node:fs";
 import { homedir } from "node:os";
 import { join } from "node:path";
 import { pathToFileURL } from "node:url";
@@ -56,7 +56,62 @@ function cacheToken(token) {
   } catch { /* cache is best-effort */ }
 }
 
+// Candidate Chrome/Chromium-family binaries by platform — used to open sign-in
+// in a small chrome-less app window (no tabs / address bar) instead of taking
+// over the user's main browser. Absolute paths (mac/win) are existence-checked;
+// bare names (linux) are resolved via `which`.
+function chromeCandidates() {
+  if (process.platform === "darwin") {
+    return [
+      "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+      join(homedir(), "Applications/Google Chrome.app/Contents/MacOS/Google Chrome"),
+      "/Applications/Chromium.app/Contents/MacOS/Chromium",
+      "/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge",
+      "/Applications/Brave Browser.app/Contents/MacOS/Brave Browser",
+    ];
+  }
+  if (process.platform === "win32") {
+    const pf = process.env["PROGRAMFILES"] || "C:\\Program Files";
+    const pfx86 = process.env["PROGRAMFILES(X86)"] || "C:\\Program Files (x86)";
+    const local = process.env.LOCALAPPDATA || "";
+    return [
+      `${pf}\\Google\\Chrome\\Application\\chrome.exe`,
+      `${pfx86}\\Google\\Chrome\\Application\\chrome.exe`,
+      `${local}\\Google\\Chrome\\Application\\chrome.exe`,
+      `${pfx86}\\Microsoft\\Edge\\Application\\msedge.exe`,
+      `${pf}\\Microsoft\\Edge\\Application\\msedge.exe`,
+    ];
+  }
+  return ["google-chrome", "google-chrome-stable", "chromium", "chromium-browser", "brave-browser", "microsoft-edge"];
+}
+
+// First Chrome-family binary that actually exists on this machine, or null.
+function resolveChrome() {
+  for (const bin of chromeCandidates()) {
+    if (bin.includes("/") || bin.includes("\\")) {
+      if (existsSync(bin)) return bin;
+      continue;
+    }
+    try {
+      const r = spawnSync(process.platform === "win32" ? "where" : "which", [bin], { encoding: "utf8" });
+      if (r.status === 0 && r.stdout.trim()) return r.stdout.trim().split(/\r?\n/)[0];
+    } catch { /* no which/where — skip */ }
+  }
+  return null;
+}
+
 function openBrowser(url) {
+  // Prefer a small, chrome-less app window (--app) using the user's existing
+  // browser profile, so they're already signed in and it doesn't hijack their
+  // main window. Sized for the authorize card, not a full browser.
+  const chrome = resolveChrome();
+  if (chrome) {
+    try {
+      spawn(chrome, [`--app=${url}`, "--window-size=480,760"], { stdio: "ignore", detached: true }).unref();
+      return;
+    } catch { /* fall through to the default opener */ }
+  }
+  // Fallback: hand the URL to the OS default opener (a normal browser tab).
   const cmd = process.platform === "darwin" ? "open" : process.platform === "win32" ? "cmd" : "xdg-open";
   const args = process.platform === "win32" ? ["/c", "start", "", url] : [url];
   try { spawn(cmd, args, { stdio: "ignore", detached: true }).unref(); } catch { /* user pastes the URL */ }

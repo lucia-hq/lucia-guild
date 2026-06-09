@@ -9,8 +9,9 @@ node bd.mjs start --sector "fashion e-commerce" --geo "US" --size "mid-market"
 #   -> journeyId: bdj_...   from: <username>@getlucia.ai   scans 0/5
 
 # 2. (You research and PROPOSE a shortlist; the Lucian picks — no command.)
-#    Private commercial/consumer brands only — never government, healthcare,
-#    emergency, education/children, charities, or political/religious orgs.
+#    Any kind of org is fair game — match the approach: commercial brands get
+#    the competitive/legal context; charities/healthcare/schools/government get
+#    a pure inclusion pitch (use --tone mission at the email step).
 
 # 3. Recon each shortlisted prospect (read-only, no scan, no cost)
 node bd.mjs recon https://www.exampleshop.com
@@ -21,12 +22,12 @@ node bd.mjs status bdt_...                                 # repeat until status
 node bd.mjs summary bdt_...                                # findings + score + preview + evidence siteId
 
 # 5. Pitch assets
-node bd.mjs email bdt_... --region us                      # subject + body + bodyHash
+node bd.mjs email bdt_... --region us --tone commercial    # subject + body + bodyHash
 node bd.mjs deck-data bdt_...                              # JSON evidence -> build the PPTX with the pptx skill
 
 # 6. Send (gated — off until the operator enables it)
 node bd.mjs recipient bdt_... buyer@exampleshop.com --name "Sam Buyer"
-node bd.mjs send bdt_... --hash <bodyHash from step 5> --region us
+node bd.mjs send bdt_... --hash <bodyHash from step 5> --region us --tone commercial
 
 # Any time: your BD dashboard
 node bd.mjs mine
@@ -35,6 +36,9 @@ node bd.mjs mine
 ## Notes
 - `--region` (us|uk|eu) sets the legal-context line in the email; omit for a
   combined US/UK/EU framing.
+- `--tone` commercial (default) or mission — mission drops the legal angle and
+  leads purely with the inclusion benefit (charities/healthcare/schools/
+  government). Pass the SAME `--tone` to `send` as to `email`.
 - The recipient's domain must match the scanned prospect's registrable domain.
 - `send` returns `blocked_disabled` (a friendly message) until a Lucia operator
   completes the Cloudflare email setup and arms the kill-switch. That is normal.
