@@ -16,6 +16,10 @@ This repository is a Claude Code **plugin + marketplace**. Install it and you ge
   browser as a screen-reader / keyboard-only / low-vision user to find the
   interaction- and state-dependent WCAG failures scanners can't reach, **verifies
   every finding deterministically**, and proposes live edge fixes.
+- the **`bd-outreach`** skill (**`/lucia:prospect`**) — a guided business-development
+  journey for active Lucians doing outbound *for* Lucia: pick a market, research a
+  shortlist of suitable companies, run real Lucia scans on up to five, and generate
+  an evidence-backed pitch email and deck from the before/after results.
 
 New to the Guild? Apply at **getlucia.ai/guild**, then run `/lucia:login` to connect
 your Claude Code and **`/lucia:train`** for a guided first audit (no activation
@@ -128,7 +132,8 @@ plugins/lucia/
 ├── commands/                       the /lucia:* commands (login, jobs, claim, start, submit, …)
 └── skills/
     ├── expert-review/              import a reviewer's findings → live fixes
-    └── probe/                      agentic AT-user accessibility tester
+    ├── probe/                      agentic AT-user accessibility tester
+    └── bd-outreach/                guided outbound BD: shortlist → scan → pitch
 ```
 
 A small, well-formed example plan lives at
