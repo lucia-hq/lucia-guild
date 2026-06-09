@@ -146,6 +146,12 @@ with ready-to-send assets.
 `node scripts/bd.mjs mine` shows their prospects + send history any time.
 
 ## Rules (important)
+- **Never patch the skill or the API.** If a CLI command returns a *server*
+  error (`D1_ERROR`, a 5xx, "no such column", etc.), surface it to the user and
+  stop — it's a Lucia-side bug for ops to fix. Do NOT edit `bd.mjs` / the plugin
+  files or try to work around the server: a plugin-cache edit fixes nothing and
+  is wiped on the next `/plugin update`. (Iterating on your own scratch scripts —
+  e.g. a deck builder you wrote — is fine; just never touch the published skill.)
 - **Accurate, never spammy.** No fabricated findings, no "now compliant", no
   legal scare tactics. If a scan didn't surface much, say so.
 - **Match the approach to the org.** The Lucian can target any kind of
