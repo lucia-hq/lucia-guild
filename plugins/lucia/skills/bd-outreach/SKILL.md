@@ -138,6 +138,15 @@ drop into the email, a DM, or a follow-up; it's the same honest before/after as
 the deck, just interactive and web-native. The id is unguessable, so it's only
 seen by whoever the Lucian shares it with.
 
+**It's tracked.** `bd summary <targetId>` reports whether the prospect actually
+**opened** the share page — real opens are JS-confirmed, so link-scanners and
+email-preview bots are counted separately and ignored — with the last-opened
+time and a rough visitor count. It also lists any **replies** captured against
+that pitch (matched back by the email's threading headers). So you can tell the
+Lucian "they opened it twice yesterday but haven't replied" and suggest a
+follow-up. (Reply capture goes live once the operator finishes Cloudflare Email
+setup; view tracking is live now.)
+
 ### 6. Send (gated)
 Record the prospect contact (the recipient's domain must match the scanned
 prospect — you can only email a company you actually scanned):

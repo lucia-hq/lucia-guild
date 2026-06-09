@@ -141,6 +141,26 @@ async function main() {
       console.log(`  score: ${out.scoreBefore ?? "?"} -> ${out.scoreAfter ?? "?"} (out of 100)`);
       console.log(`  preview: ${out.previewUrl ?? "(none)"}`);
       if (out.pitchUrl) console.log(`  share page (live before/after, branded): ${out.pitchUrl}`);
+      const pv = out.pitchViews;
+      if (pv) {
+        const opened = pv.humanViews > 0
+          ? `OPENED ${pv.humanViews}×`
+          : (pv.humanLoads > 0 ? `loaded ${pv.humanLoads}× (no JS-confirmed open)` : "not opened yet");
+        const extra = [
+          pv.lastViewedAt ? `last ${pv.lastViewedAt}` : null,
+          pv.uniqueVisitors ? `~${pv.uniqueVisitors} visitor(s)` : null,
+          pv.botLoads ? `${pv.botLoads} bot/scanner hit(s) ignored` : null,
+        ].filter(Boolean).join(", ");
+        console.log(`  pitch page: ${opened}${extra ? ` (${extra})` : ""}`);
+      }
+      if (out.replies && out.replies.length) {
+        console.log(`  replies (${out.replies.length}):`);
+        for (const r of out.replies) {
+          console.log(`    - ${r.from}${r.subject ? ` — "${r.subject}"` : ""} (${r.at}${r.matchedBy ? `, ${r.matchedBy}` : ""})`);
+        }
+      } else {
+        console.log(`  replies: none captured yet`);
+      }
       console.log(`  evidence pack siteId: ${out.evidencePack.siteId}  (fetch reports.evidencePack {siteId})`);
       console.log(`  headline findings:`);
       printFindings(out.findings);
