@@ -23,7 +23,7 @@ node bd.mjs summary bdt_...                                # findings + score + 
 
 # 5. Pitch assets
 node bd.mjs email bdt_... --region us --tone commercial    # subject + body + bodyHash
-node bd.mjs deck-data bdt_...                              # JSON evidence -> build the PPTX with the pptx skill
+node bd.mjs deck-data bdt_... | node make-deck.mjs - deck.pptx   # branded PPTX (one-time: npm install in scripts/)
 
 # 6. Send (gated — off until the operator enables it)
 node bd.mjs recipient bdt_... buyer@exampleshop.com --name "Sam Buyer"

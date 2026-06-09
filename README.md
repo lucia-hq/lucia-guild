@@ -99,6 +99,18 @@ npx playwright install chromium
 
 (The `expert-review` skill has no dependencies — it uses Node 18+'s built-in fetch.)
 
+### One-time setup for the `bd-outreach` deck builder
+
+The BD journey's `make-deck.mjs` builds the pitch PPTX with
+[pptxgenjs](https://gitbrent.github.io/PptxGenJS/), so install it once:
+
+```
+cd plugins/lucia/skills/bd-outreach/scripts
+npm install
+```
+
+(The rest of `bd-outreach` — scans, pitch email — uses Node 18+'s built-in fetch.)
+
 ## Workflow
 
 ```

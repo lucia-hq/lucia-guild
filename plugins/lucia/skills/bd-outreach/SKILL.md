@@ -115,17 +115,19 @@ not a claim of full compliance*. **Don't rewrite it to overclaim.** The send
 re-verifies the body, so material edits — including a different `--tone` — mean
 re-generating; pass the **same** `--tone` to `send`.
 
-**Deck** — build a short PPTX from the real evidence. Get the structured data:
+**Deck** — build a branded PPTX from the real evidence with the skill's **own
+builder** (one-time setup: `npm install` in `scripts/`, like the probe skill).
+Pipe the evidence straight in:
 
 ```
-node scripts/bd.mjs deck-data <targetId>
+node scripts/bd.mjs deck-data <targetId> | node scripts/make-deck.mjs - <prospect>-lucia.pptx
 ```
 
-Then use the **pptx skill** (`anthropic-skills:pptx`) to assemble a tight deck:
-cover (prospect name), the legal-wedge context for their region, the
-**before/after score**, the **specific findings** with the fix, a slide linking
-the **live preview**, and a clear CTA. Build it strictly from the returned
-evidence — real findings, real scores. Save it where the Lucian can grab it.
+`make-deck.mjs` builds the whole deck — cover, the before/after score, the
+specific WCAG findings, a live-preview slide, and an honest "needs a human audit
+for full conformance" close — strictly from the returned evidence. **Don't
+hand-roll a pptx script**; this one handles the pptxgenjs (CommonJS) import +
+layout for you. Save it where the Lucian can grab it, then offer to tweak wording.
 
 ### 6. Send (gated)
 Record the prospect contact (the recipient's domain must match the scanned

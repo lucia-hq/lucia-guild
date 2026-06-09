@@ -1,0 +1,8 @@
+{
+  "name": "lucia-bd-outreach-scripts",
+  "private": true,
+  "description": "BD outreach skill scripts. make-deck.mjs needs pptxgenjs; run `npm install` once (the rest use Node 18+ built-in fetch).",
+  "dependencies": {
+    "pptxgenjs": "^3.12.0"
+  }
+}
