@@ -114,9 +114,11 @@ async function main() {
     }
     case "login": {
       await ensureToken();
-      await mutate("experts.connectClaude", undefined);
+      const out = await mutate("experts.connectClaude", undefined);
       console.log("logged in and connected your Claude Code to the Guild.");
-      console.log("A Lucia operator will activate you — then run: /lucia:jobs");
+      console.log(out?.activated
+        ? "You're pre-approved, so your account is active now. See open jobs: /lucia:jobs"
+        : "A Lucia operator will activate you — then run: /lucia:jobs");
       return;
     }
     case "list": {
