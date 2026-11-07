@@ -9,7 +9,7 @@ MARKER="${HOME}/.lucia/welcomed"
 mkdir -p "$(dirname "$MARKER")" 2>/dev/null || true
 : > "$MARKER" 2>/dev/null || true
 
-MSG="The Lucia Guild plugin is installed. Greet the user warmly and tell them, in two short sentences: start with /lucia:login to connect, then /lucia:train for a guided first audit — you spin up a demo site, watch Lucia auto-remediate it, fix one issue yourself, and see it live, all before activation. Mention /lucia:welcome shows the full command list (login, train, whoami, jobs, claim, start, submit)."
+MSG="The Lucia Guild plugin is installed. Greet the user warmly and tell them, in two short sentences: start with /lucia:login to connect, then /lucia:train for the two-stage training assessment you need to pass before activation. Mention /lucia:welcome shows the full command list (login, train, whoami, jobs, claim, start, submit)."
 
 if command -v jq >/dev/null 2>&1; then
   jq -n --arg c "$MSG" '{hookSpecificOutput:{hookEventName:"SessionStart",additionalContext:$c}}'

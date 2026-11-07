@@ -84,6 +84,7 @@ function printJob(j) {
   const variants = Math.max(0, (j.pageCountTotal || 0) - (j.pageCountUnique || 0));
   console.log(`  ${j.id}${rush}`);
   console.log(`    ${j.siteHostname || j.siteId}, ${j.sizeTier}, ${quote}, ~${j.estimatedHours}h`);
+  if (j.siteHostname && j.siteId) console.log(`    site ${j.siteId}`);
   console.log(`    ${j.pageCountUnique} unique page(s), ${variants} variant(s), ${j.languageCount} language(s), status=${j.status}`);
 }
 
@@ -94,7 +95,7 @@ async function main() {
       const me = await query("experts.me", undefined);
       if (!me) { console.log("Not a Lucian yet. Apply with: node jobs.mjs apply"); return; }
       console.log(`${me.displayName || me.email} — ${me.tier}, status=${me.status}`);
-      console.log(`Claude Code: ${me.claudeConnectedAt ? "connected " : "NOT connected — run: /lucia login"}`);
+      console.log(`Claude Code: ${me.claudeConnectedAt ? "connected " : "NOT connected — run: /lucia:login"}`);
       return;
     }
     case "apply": {
@@ -106,14 +107,14 @@ async function main() {
         specializations: specs ? specs.split(",").map((s) => s.trim()).filter(Boolean) : undefined,
       });
       console.log(`Applied to the Guild. status=${out?.status ?? "applied"}.`);
-      console.log("Next: /lucia login  (signs in + connects this Claude Code; then a Lucia operator activates you).");
+      console.log("Next: /lucia:login  (signs in + connects this Claude Code; then a Lucia operator activates you).");
       return;
     }
     case "login": {
       await ensureToken();
       await mutate("experts.connectClaude", undefined);
       console.log("logged in and connected your Claude Code to the Guild.");
-      console.log("A Lucia operator will activate you — then run: /lucia jobs");
+      console.log("A Lucia operator will activate you — then run: /lucia:jobs");
       return;
     }
     case "list": {

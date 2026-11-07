@@ -8,8 +8,8 @@ This repository is a Claude Code **plugin + marketplace**. Install it and you ge
 
 - a set of **`/lucia:*`** commands — the Guild job loop (`/lucia:login`,
   `/lucia:jobs`, `/lucia:claim`, `/lucia:start`, `/lucia:submit`), plus
-  **`/lucia:train`** — a guided first audit on a demo site, runnable before
-  you're activated, that ends with your fix live on a preview URL;
+  **`/lucia:train`** — the two-stage training assessment (audit a demo page,
+  then catch bad automated fixes), required before activation;
 - the **`expert-review`** skill — turn a human reviewer's findings document into
   live Lucia fixes (parse findings, locate the element, author a fix, submit);
 - the **`probe`** skill — an agentic assistive-technology tester that drives a real

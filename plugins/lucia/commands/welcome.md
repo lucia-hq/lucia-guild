@@ -7,11 +7,11 @@ Present (concisely — don't dump a wall of text):
 
 - **What this is:** the Lucia Guild — claim and deliver web-accessibility audit
   jobs from your own Claude Code.
-- **Start here:** run **`/lucia:login`** to connect, then **`/lucia:train`** for a
-  guided first audit — it works even before a Lucia operator activates you.
+- **Start here:** run **`/lucia:login`** to connect, then **`/lucia:train`** for the
+  training assessment — it works even before a Lucia operator activates you.
 - **The commands:**
   - `/lucia:login` — sign in + connect this Claude Code
-  - `/lucia:train [url]` — guided practice audit on a demo site → see it live
+  - `/lucia:train` — the two-stage training assessment, required before activation
   - `/lucia:whoami` — your profile + status
   - `/lucia:jobs` — open jobs on the board (once you're activated)
   - `/lucia:claim <id>` · `/lucia:start <id>` · `/lucia:submit <id>` — the job loop
