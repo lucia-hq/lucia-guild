@@ -8,6 +8,6 @@ Locate this plugin's job CLI — `skills/expert-review/scripts/jobs.mjs` (or `.c
 
 `node <path-to-jobs.mjs> claim $ARGUMENTS`
 
-The argument is the job id from `/lucia:jobs`.
+The argument is the job id from `/lucia:jobs`. Tell the user they must start the job within 10 minutes (`/lucia:start <jobId>`), or it goes back on the board.
 
 Then summarise the output for the user.

@@ -86,6 +86,8 @@ function printJob(j) {
   console.log(`    ${j.siteHostname || j.siteId}, ${j.sizeTier}, ${quote}, ~${j.estimatedHours}h`);
   if (j.siteHostname && j.siteId) console.log(`    site ${j.siteId}`);
   console.log(`    ${j.pageCountUnique} unique page(s), ${variants} variant(s), ${j.languageCount} language(s), status=${j.status}`);
+  if (j.status === "claimed" && j.holdExpiresAt) console.log(`    start by ${j.holdExpiresAt} or it returns to the board`);
+  if (j.status === "rework" && j.review?.notes) console.log(`    QA notes: ${j.review.notes}`);
 }
 
 async function main() {
@@ -142,9 +144,14 @@ async function main() {
     case "start": {
       const id = rest[0];
       if (!id || id.startsWith("--")) die("usage: node jobs.mjs start <jobId>");
-      await mutate("jobs.start", { jobId: id });
-      console.log(`started ${id}. Audit the site with the probe skill, submit fixes with ./submit.mjs,`);
-      console.log(`then hand it to QA: node jobs.mjs submit ${id} --findings N --net-new N`);
+      const out = await mutate("jobs.start", { jobId: id });
+      if (out?.resumed) {
+        console.log(`resumed ${id} after QA rework. Address QA's notes (node jobs.mjs mine shows them), then resubmit:`);
+      } else {
+        console.log(`started ${id}. Audit the site with the probe skill, submit fixes with ./submit.mjs,`);
+        console.log(`then hand it to QA:`);
+      }
+      console.log(`  node jobs.mjs submit ${id} --findings N --net-new N`);
       return;
     }
     case "submit": {
